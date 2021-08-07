@@ -6,3 +6,14 @@ depend: [ eco ]
 authors: [ ilm9001 ]
 description: Cosmetics plugin for Dreamland
 website: ilm9001.com
+
+commands:
+  givecosmetic:
+    description: gives a cosmetic
+    usage: /givecosmetic <cosmetic>
+    permission: cosmetics.givecosmetic
+
+permissions:
+  cosmetics.givecosmetic:
+    description: allows givecosmetic
+    default: op
