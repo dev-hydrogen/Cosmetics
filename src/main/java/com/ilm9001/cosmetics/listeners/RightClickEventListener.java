@@ -33,7 +33,7 @@ public class RightClickEventListener implements Listener {
             metaContainer = item.getItemMeta().getPersistentDataContainer();
          } else return;
          
-         if(metaContainer.get(key, PersistentDataType.BYTE) != null) {
+         if(metaContainer.get(key, PersistentDataType.BYTE) != null) { //verify that item has metadata indicating cosmetic-type
             Cosmetic cosmetic = Cosmetic.getCosmeticFromItemStack(item);
             equipper.equipCosmetic(plr, cosmetic, e.getHand());
          }

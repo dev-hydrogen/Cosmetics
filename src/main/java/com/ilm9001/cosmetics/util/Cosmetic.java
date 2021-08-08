@@ -2,12 +2,16 @@ package com.ilm9001.cosmetics.util;
 
 import com.ilm9001.cosmetics.Cosmetics;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -29,31 +33,33 @@ public class Cosmetic {
       this.type = type;
       this.lore = new ArrayList<>();
       for (String string : lore) {
-         Component cmp = Component.text(string);
+         Component cmp = Component.text(string)
+                 .decoration(TextDecoration.ITALIC,false)
+                 .color(TextColor.color(255,255,255));
          this.lore.add(cmp);
       }
    }
    
    public Cosmetic(Component cosmeticName, Integer modelID, Material material, List<Component> lore, CosmeticType type) {
-      this.cosmeticName = cosmeticName.toString();
+      this.cosmeticName = PlainTextComponentSerializer.plainText().serialize(cosmeticName);
       this.modelID = modelID;
       this.material = material;
       this.type = type;
       this.lore = lore;
    }
-   public Integer getModelID() {
+   public @NotNull Integer getModelID() {
       return modelID;
    }
-   public String getCosmeticName() {
+   public @NotNull String getCosmeticName() {
       return cosmeticName;
    }
-   public Material getMaterial() {
+   public @NotNull Material getMaterial() {
       return material;
    }
-   public List<Component> getLore() {
+   public @NotNull List<Component> getLore() {
       return lore;
    }
-   public CosmeticType getType() {
+   public @NotNull CosmeticType getType() {
       return type;
    }
    
@@ -62,10 +68,12 @@ public class Cosmetic {
     *
     * @return         ItemStack that was created
     */
-   public ItemStack getCosmeticItemStack() {
+   public @NotNull ItemStack getCosmeticItemStack() {
       ItemStack stack = new ItemStack(this.getMaterial());
       ItemMeta meta = stack.getItemMeta();
-      Component displayNameComponent = Component.text(this.getCosmeticName());
+      Component displayNameComponent = Component.text(this.getCosmeticName())
+              .decoration(TextDecoration.ITALIC,false)
+              .decoration(TextDecoration.BOLD,true);
       NamespacedKey key = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-type");
       PersistentDataContainer metaContainer = meta.getPersistentDataContainer();
       
@@ -80,12 +88,12 @@ public class Cosmetic {
    }
    
    /**
-    * Fetch a Cosmetic from a provided ItemStack and CosmeticType
+    * Fetch a Cosmetic from a provided ItemStack
     *
     * @param itemStack    ItemStack to get Cosmetic from
     * @return             Cosmetic if ItemStack is a valid cosmetic, Null if ItemStack is not a valid cosmetic
     */
-   public static @Nullable Cosmetic getCosmeticFromItemStack(ItemStack itemStack) {
+   public static @Nullable Cosmetic getCosmeticFromItemStack(@NotNull ItemStack itemStack) {
       ItemMeta meta = itemStack.getItemMeta();
       NamespacedKey key = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-type");
       PersistentDataContainer metaContainer = meta.getPersistentDataContainer();
