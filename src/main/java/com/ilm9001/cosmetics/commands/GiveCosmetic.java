@@ -12,19 +12,21 @@ import org.jetbrains.annotations.NotNull;
 
 // initially a testing command to give a cosmetic to a player
 public class GiveCosmetic implements CommandExecutor {
+   
    @Override
    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-      if(sender instanceof Player && sender.hasPermission("cosmetics.givecosmetic")) {
+      if(sender instanceof Player && sender.hasPermission("cosmetics.givecosmetic") && args.length == 1) {
          Cosmetic cosmetic = Cosmetics.getCosmeticFactory().getCosmeticFromName(args[0]);
          ItemStack cosmeticItem;
          
          if(cosmetic == null) {
             sender.sendMessage(ChatColor.RED + "Invalid cosmetic name");
-            return false;
+            return true;
          }
          
          cosmeticItem = cosmetic.getCosmeticItemStack();
          ((Player) sender).getInventory().addItem(cosmeticItem);
+         return true;
       }
       return false;
    }

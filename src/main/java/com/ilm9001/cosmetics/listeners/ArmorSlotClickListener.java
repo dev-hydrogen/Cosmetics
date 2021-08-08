@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -52,9 +53,19 @@ public class ArmorSlotClickListener implements Listener {
              */
             if(itemInSlot == null || itemInSlot.equals(new ItemStack(Material.AIR))) {
                player.setItemOnCursor(null);
-            } else player.setItemOnCursor(itemInSlot);
-            Bukkit.getScheduler().runTask(Cosmetics.getInstance(), () -> inv.setItem(e.getSlot(), itemForSlot)); // order of operations matters here
+               Bukkit.getScheduler().runTask(Cosmetics.getInstance(), () -> inv.setItem(e.getSlot(), itemForSlot));
+            } else {
+               Bukkit.getScheduler().runTask(Cosmetics.getInstance(), () -> inv.setItem(e.getSlot(), itemForSlot));
+               Bukkit.getScheduler().runTaskLater(Cosmetics.getInstance(), () -> player.setItemOnCursor(itemInSlot),1);
+            }
          }
       }
+   }
+   
+   @EventHandler
+   public void onCreativeInventoryClick(InventoryCreativeEvent e) {
+      InventoryClickEvent event = new InventoryClickEvent(e.getView(),e.getSlotType(),e.getSlot(),e.getClick(),e.getAction());
+      //lazy way, but less repetitive code i guess
+      Bukkit.getServer().getPluginManager().callEvent(event);
    }
 }

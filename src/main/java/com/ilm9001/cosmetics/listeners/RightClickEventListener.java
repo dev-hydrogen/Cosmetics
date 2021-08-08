@@ -7,6 +7,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -23,7 +24,7 @@ public class RightClickEventListener implements Listener {
    
    @EventHandler
    public void onRightClick(PlayerInteractEvent e) {
-      if(e.hasItem()) {
+      if(e.getItem() != null && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
          Player plr = e.getPlayer();
          ItemStack item = e.getItem();
          NamespacedKey key = new NamespacedKey(Cosmetics.getInstance(), "cosmetic-type");
@@ -34,8 +35,7 @@ public class RightClickEventListener implements Listener {
          } else return;
          
          if(metaContainer.get(key, PersistentDataType.BYTE) != null) { //verify that item has metadata indicating cosmetic-type
-            Cosmetic cosmetic = Cosmetic.getCosmeticFromItemStack(item);
-            equipper.equipCosmetic(plr, cosmetic, e.getHand());
+            equipper.equipCosmetic(plr,e.getHand(),item);
          }
       }
    }

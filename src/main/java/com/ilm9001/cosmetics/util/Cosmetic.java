@@ -17,16 +17,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 //main cosmetic utility class
 public class Cosmetic {
-   public final String cosmeticName;
-   public final Integer modelID;
-   public final Material material;
-   public final List<Component> lore;
-   public final CosmeticType type;
+   private final String internalCosmeticName;
+   private final String cosmeticName;
+   private final Integer modelID;
+   private final Material material;
+   private final List<Component> lore;
+   private final CosmeticType type;
    
-   public Cosmetic(String cosmeticName, Integer modelID, Material material, List<String> lore, CosmeticType type) {
+   public Cosmetic(String internalCosmeticName,String cosmeticName, Integer modelID, Material material, List<String> lore, CosmeticType type) {
+      this.internalCosmeticName = internalCosmeticName;
       this.cosmeticName = cosmeticName;
       this.modelID = modelID;
       this.material = material;
@@ -40,7 +43,8 @@ public class Cosmetic {
       }
    }
    
-   public Cosmetic(Component cosmeticName, Integer modelID, Material material, List<Component> lore, CosmeticType type) {
+   public Cosmetic(String internalCosmeticName, Component cosmeticName, Integer modelID, Material material, List<Component> lore, CosmeticType type) {
+      this.internalCosmeticName = internalCosmeticName;
       this.cosmeticName = PlainTextComponentSerializer.plainText().serialize(cosmeticName);
       this.modelID = modelID;
       this.material = material;
@@ -62,6 +66,7 @@ public class Cosmetic {
    public @NotNull CosmeticType getType() {
       return type;
    }
+   public @NotNull String getInternalName() {return internalCosmeticName; }
    
    /**
     * Creates a ItemStack with the properties of the provided Cosmetic
@@ -74,13 +79,15 @@ public class Cosmetic {
       Component displayNameComponent = Component.text(this.getCosmeticName())
               .decoration(TextDecoration.ITALIC,false)
               .decoration(TextDecoration.BOLD,true);
-      NamespacedKey key = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-type");
+      NamespacedKey typekey = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-type");
+      NamespacedKey namekey = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-name");
       PersistentDataContainer metaContainer = meta.getPersistentDataContainer();
       
       meta.lore(this.getLore());
       meta.setCustomModelData(this.getModelID());
       meta.displayName(displayNameComponent);
-      metaContainer.set(key,PersistentDataType.BYTE,this.getType().getID());
+      metaContainer.set(typekey,PersistentDataType.BYTE,this.getType().getID());
+      metaContainer.set(namekey,PersistentDataType.STRING,this.getInternalName());
       
       stack.setItemMeta(meta);
       
@@ -95,17 +102,20 @@ public class Cosmetic {
     */
    public static @Nullable Cosmetic getCosmeticFromItemStack(@NotNull ItemStack itemStack) {
       ItemMeta meta = itemStack.getItemMeta();
-      NamespacedKey key = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-type");
+      NamespacedKey typekey = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-type");
+      NamespacedKey namekey = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-name");
       PersistentDataContainer metaContainer = meta.getPersistentDataContainer();
       Optional<CosmeticType> type;
+      String internalname;
       
-      if(metaContainer.get(key,PersistentDataType.BYTE) != null) {
-         type = CosmeticType.getFromID(metaContainer.get(key, PersistentDataType.BYTE));
+      if(metaContainer.get(typekey,PersistentDataType.BYTE) != null && metaContainer.get(namekey,PersistentDataType.STRING) != null) {
+         type = CosmeticType.getFromID(metaContainer.get(typekey, PersistentDataType.BYTE));
+         internalname = metaContainer.get(namekey,PersistentDataType.STRING);
       } else {
          return null;
       }
       if(itemStack.hasItemMeta() & meta.hasDisplayName() & meta.hasCustomModelData() & meta.hasLore() & type.isPresent()) {
-         return new Cosmetic(meta.displayName(),meta.getCustomModelData(),itemStack.getType(),meta.lore(),type.get());
+         return new Cosmetic(internalname,meta.displayName(),meta.getCustomModelData(),itemStack.getType(),meta.lore(),type.get());
       } else {
          return null;
       }
