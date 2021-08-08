@@ -31,6 +31,7 @@ public class CosmeticFactory {
    public @NotNull List<Cosmetic> getCosmeticsFromConfig() {
       List<Cosmetic> cosmeticsList = new ArrayList<>();
       JavaPlugin plugin = Cosmetics.getInstance();
+      Cosmetics.getInstance().reloadConfig();
       FileConfiguration config = plugin.getConfig();
       
       for (String internalname : config.getConfigurationSection("Cosmetics").getKeys(false)) {
@@ -58,6 +59,7 @@ public class CosmeticFactory {
          Cosmetic cosmetic = new Cosmetic(internalname,name,modelID,material,lore,type);
          cosmeticsList.add(cosmetic);
       }
+      Cosmetics.setCachedCosmeticList(cosmeticsList);
       return cosmeticsList;
    }
    

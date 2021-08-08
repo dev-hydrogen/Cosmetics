@@ -2,7 +2,6 @@ name: Cosmetics
 version: ${project.version}
 main: com.ilm9001.cosmetics.Cosmetics
 api-version: 1.17
-depend: [ eco ]
 authors: [ ilm9001 ]
 description: Cosmetics plugin for Dreamland
 website: ilm9001.com
@@ -10,10 +9,17 @@ website: ilm9001.com
 commands:
   givecosmetic:
     description: gives a cosmetic
-    usage: /givecosmetic <cosmetic>
+    usage: /givecosmetic <cosmetic> [online player]
     permission: cosmetics.givecosmetic
+  refreshcosmetics:
+    description: refreshes cosmetic list and gets updated list from config
+    usage: /refreshcosmetics
+    permission: cosmetics.refresh
 
 permissions:
   cosmetics.givecosmetic:
     description: allows givecosmetic
+    default: op
+  cosmetics.refresh:
+    description: allows refreshing the cosmetics list
     default: op

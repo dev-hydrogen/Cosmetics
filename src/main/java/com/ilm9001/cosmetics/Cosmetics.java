@@ -2,6 +2,7 @@ package com.ilm9001.cosmetics;
 
 import com.ilm9001.cosmetics.commands.GiveCosmetic;
 import com.ilm9001.cosmetics.commands.GiveCosmeticTabComplete;
+import com.ilm9001.cosmetics.commands.RefreshCosmeticsList;
 import com.ilm9001.cosmetics.listeners.ArmorSlotClickListener;
 import com.ilm9001.cosmetics.listeners.RightClickEventListener;
 import com.ilm9001.cosmetics.summon.CosmeticFactory;
@@ -26,8 +27,10 @@ public class Cosmetics extends JavaPlugin {
          cosmeticList = cosmeticFactory.getCosmeticsFromConfig();
       }
       
+      // probably a good idea to eventually move these elsewhere to work as a method
       this.getCommand("givecosmetic").setExecutor(new GiveCosmetic());
       this.getCommand("givecosmetic").setTabCompleter(new GiveCosmeticTabComplete());
+      this.getCommand("refreshcosmetics").setExecutor(new RefreshCosmeticsList());
       getServer().getPluginManager().registerEvents(new RightClickEventListener(), this);
       getServer().getPluginManager().registerEvents(new ArmorSlotClickListener(), this);
    }
@@ -46,4 +49,11 @@ public class Cosmetics extends JavaPlugin {
     * @return List of cached (read from config at load) Cosmetic's
     */
    public static List<Cosmetic> getCachedCosmeticList() { return cosmeticList; }
+   
+   /**
+    * Called from CosmeticFactory#getCosmeticsFromConfig(), refreshes cache and updates cosmetic list if new ones are found
+    * in the config!
+    * @param cList List of Cosmetic's from CosmeticFactory#getCosmeticsFromConfig()
+    */
+   public static void setCachedCosmeticList(List<Cosmetic> cList) { cosmeticList = cList;}
 }
