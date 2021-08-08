@@ -3,12 +3,11 @@ package com.ilm9001.cosmetics.listeners;
 import com.ilm9001.cosmetics.Cosmetics;
 import com.ilm9001.cosmetics.util.Cosmetic;
 import com.ilm9001.cosmetics.util.CosmeticType;
-import org.apache.commons.lang.Validate;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,11 +15,15 @@ import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Optional;
+
+/**
+ * Listens if player is trying to slot a cosmetic piece to their armor slot
+ * Applies Cosmetic to the slot if of correct CosmeticType and if has Cosmetic-data
+ */
 
 public class ArmorSlotClickListener implements Listener {
    
@@ -62,8 +65,12 @@ public class ArmorSlotClickListener implements Listener {
       }
    }
    
+   /**
+    * The same logic as above, but so it works through the creative menu too.
+    */
    @EventHandler
    public void onCreativeInventoryClick(InventoryCreativeEvent e) {
+      //TODO: Find armor slot integers for creative menu, apparently theyre different.
       InventoryClickEvent event = new InventoryClickEvent(e.getView(),e.getSlotType(),e.getSlot(),e.getClick(),e.getAction());
       //lazy way, but less repetitive code i guess
       Bukkit.getServer().getPluginManager().callEvent(event);

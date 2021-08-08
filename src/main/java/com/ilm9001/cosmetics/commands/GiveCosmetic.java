@@ -10,7 +10,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-// initially a testing command to give a cosmetic to a player
+/**
+ * Basically a testing command to give the specified Cosmetic to the player
+ *
+ */
 public class GiveCosmetic implements CommandExecutor {
    
    @Override

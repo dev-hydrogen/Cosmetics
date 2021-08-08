@@ -7,22 +7,27 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class CosmeticFactory {
-   private ArrayList<Cosmetic> cosmetics;
    private ArrayList<String> cosmeticNames;
    private Integer cosmeticCount;
    
    public CosmeticFactory() {
-      cosmetics = new ArrayList<>();
       cosmeticNames = new ArrayList<>();
       cosmeticCount = 0;
    }
    
+   /**
+    * Returns a non-cached List of Cosmetic's by reading the config.
+    * Uses default Material.PAPER if none is specified. Returns empty ArrayList for lore if none is specified.
+    *
+    * @return List of non-cached Cosmetic's from config
+    */
    public @NotNull List<Cosmetic> getCosmeticsFromConfig() {
       List<Cosmetic> cosmeticsList = new ArrayList<>();
       JavaPlugin plugin = Cosmetics.getInstance();
@@ -55,17 +60,23 @@ public class CosmeticFactory {
       }
       return cosmeticsList;
    }
+   
    public Integer getCosmeticCount() {
       return cosmeticCount;
-   }
-   public List<Cosmetic> getCosmetics() {
-      return cosmetics;
    }
    public List<String> getCosmeticNames() {
       return cosmeticNames;
    }
-   public Cosmetic getCosmeticFromName(String name) {
-      for (Cosmetic cosmetic : cosmetics) {
+   
+   /**
+    * Get a Cosmetic from its InternalName
+    *
+    * @param name InternalName, always one "word"
+    * @return     Cosmetic from InternalName, null if none found.
+    */
+   
+   public @Nullable Cosmetic getCosmeticFromName(String name) {
+      for (Cosmetic cosmetic : Cosmetics.getCachedCosmeticList()) {
          if(cosmetic.getInternalName().equals(name)) { //probably inefficient for large amounts of cosmetics?
             return cosmetic;
          }

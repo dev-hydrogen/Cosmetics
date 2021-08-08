@@ -1,7 +1,7 @@
 package com.ilm9001.cosmetics.summon;
 
 import com.ilm9001.cosmetics.util.Cosmetic;
-import org.bukkit.Material;
+
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;

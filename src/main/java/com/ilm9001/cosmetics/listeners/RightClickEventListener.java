@@ -2,7 +2,7 @@ package com.ilm9001.cosmetics.listeners;
 
 import com.ilm9001.cosmetics.Cosmetics;
 import com.ilm9001.cosmetics.summon.CosmeticEquipper;
-import com.ilm9001.cosmetics.util.Cosmetic;
+
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,7 +13,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-//when a player right clicks on a equippable cosmetic, equip it to their armor.
+/**
+ * Listens to RightClick events and equips cosmetic if player is holding one.
+ *
+ */
 
 public class RightClickEventListener implements Listener {
    private CosmeticEquipper equipper;

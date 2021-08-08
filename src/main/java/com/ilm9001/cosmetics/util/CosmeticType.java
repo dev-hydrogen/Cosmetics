@@ -3,7 +3,11 @@ package com.ilm9001.cosmetics.util;
 import java.util.Arrays;
 import java.util.Optional;
 
-//types of player cosmetics
+/**
+ * enum of Cosmetic types, can either be something that goes in the armor slots or something that stays in the inventory
+ *
+ */
+
 public enum CosmeticType {
    INVENTORY_ITEM ((byte)4),
    HAT ((byte)3),
