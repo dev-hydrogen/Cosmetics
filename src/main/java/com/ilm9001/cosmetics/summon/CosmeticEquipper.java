@@ -1,6 +1,7 @@
-package com.ilm9001.cosmetics.summoner;
+package com.ilm9001.cosmetics.summon;
 
 import com.ilm9001.cosmetics.util.Cosmetic;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -11,6 +12,13 @@ public class CosmeticEquipper {
    public CosmeticEquipper() {
    }
    
+   /**
+    * Equip a cosmetic on to the player and if an item is already present in that slot, switch them around
+    *
+    * @param player   Player to equip Cosmetic to
+    * @param cosmetic Cosmetic to apply to Player
+    * @param slot     EquipmentSlot of where the item is being equipped from
+    */
    public void equipCosmetic(Player player, Cosmetic cosmetic, EquipmentSlot slot) {
       PlayerInventory inv = player.getInventory();
       ItemStack[] armorSet = inv.getArmorContents();
@@ -32,17 +40,15 @@ public class CosmeticEquipper {
       }
    }
    
+   //very unsafe
    private void switchArmor(PlayerInventory inv, ItemStack armor, Cosmetic cosmetic, int slot, EquipmentSlot eslot) {
+      ItemStack[] armorset = inv.getArmorContents();
       if(armor == null) {
-         setArmor(inv,cosmetic.createCosmeticItemStack(cosmetic),slot);
+         inv.setItem(eslot,new ItemStack(Material.AIR));
       } else {
          inv.setItem(eslot,armor);
-         setArmor(inv,cosmetic.createCosmeticItemStack(cosmetic),slot);
       }
-   }
-   private void setArmor(PlayerInventory inv, ItemStack itemStack, int slot) {
-      ItemStack[] armorset = inv.getArmorContents();
-      armorset[slot] = itemStack;
+      armorset[slot] = cosmetic.getCosmeticItemStack();
       inv.setArmorContents(armorset);
    }
 }

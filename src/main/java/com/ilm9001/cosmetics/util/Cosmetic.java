@@ -60,20 +60,19 @@ public class Cosmetic {
    /**
     * Creates a ItemStack with the properties of the provided Cosmetic
     *
-    * @param cosmetic Cosmetic to create ItemStack from
     * @return         ItemStack that was created
     */
-   public ItemStack createCosmeticItemStack(Cosmetic cosmetic) {
-      ItemStack stack = new ItemStack(cosmetic.getMaterial());
+   public ItemStack getCosmeticItemStack() {
+      ItemStack stack = new ItemStack(this.getMaterial());
       ItemMeta meta = stack.getItemMeta();
-      Component displayNameComponent = Component.text(cosmetic.getCosmeticName());
+      Component displayNameComponent = Component.text(this.getCosmeticName());
       NamespacedKey key = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-type");
       PersistentDataContainer metaContainer = meta.getPersistentDataContainer();
       
-      meta.lore(cosmetic.getLore());
-      meta.setCustomModelData(cosmetic.getModelID());
+      meta.lore(this.getLore());
+      meta.setCustomModelData(this.getModelID());
       meta.displayName(displayNameComponent);
-      metaContainer.set(key,PersistentDataType.BYTE,cosmetic.getType().getID());
+      metaContainer.set(key,PersistentDataType.BYTE,this.getType().getID());
       
       stack.setItemMeta(meta);
       
@@ -91,6 +90,7 @@ public class Cosmetic {
       NamespacedKey key = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-type");
       PersistentDataContainer metaContainer = meta.getPersistentDataContainer();
       Optional<CosmeticType> type;
+      
       if(metaContainer.get(key,PersistentDataType.BYTE) != null) {
          type = CosmeticType.getFromID(metaContainer.get(key, PersistentDataType.BYTE));
       } else {
