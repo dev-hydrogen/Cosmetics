@@ -1,17 +1,12 @@
 package com.ilm9001.cosmetics.listeners;
 
-import com.ilm9001.cosmetics.Cosmetics;
 import com.ilm9001.cosmetics.summon.CosmeticEquipper;
 
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
+import com.ilm9001.cosmetics.util.Util;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 /**
  * Listens to RightClick events and equips cosmetic if player is holding one.
@@ -19,7 +14,7 @@ import org.bukkit.persistence.PersistentDataType;
  */
 
 public class RightClickEventListener implements Listener {
-   private CosmeticEquipper equipper;
+   private final CosmeticEquipper equipper;
    
    public RightClickEventListener() {
       equipper = new CosmeticEquipper();
@@ -28,17 +23,8 @@ public class RightClickEventListener implements Listener {
    @EventHandler
    public void onRightClick(PlayerInteractEvent e) {
       if(e.getItem() != null && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-         Player plr = e.getPlayer();
-         ItemStack item = e.getItem();
-         NamespacedKey key = new NamespacedKey(Cosmetics.getInstance(), "cosmetic-type");
-         PersistentDataContainer metaContainer;
-         
-         if (item.hasItemMeta()) {
-            metaContainer = item.getItemMeta().getPersistentDataContainer();
-         } else return;
-         
-         if(metaContainer.get(key, PersistentDataType.BYTE) != null) { //verify that item has metadata indicating cosmetic-type
-            equipper.equipCosmetic(plr,e.getHand(),item);
+         if(Util.isCosmetic(e.getItem())) {
+            equipper.equipCosmetic(e.getPlayer(),e.getItem(),e.getHand());
          }
       }
    }

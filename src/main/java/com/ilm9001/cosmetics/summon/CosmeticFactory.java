@@ -3,6 +3,9 @@ package com.ilm9001.cosmetics.summon;
 import com.ilm9001.cosmetics.Cosmetics;
 import com.ilm9001.cosmetics.util.Cosmetic;
 import com.ilm9001.cosmetics.util.CosmeticType;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,28 +38,39 @@ public class CosmeticFactory {
       FileConfiguration config = plugin.getConfig();
       
       for (String internalname : config.getConfigurationSection("Cosmetics").getKeys(false)) {
-         cosmeticCount++;
-         
-         Map<String,Object> valuesmap = config.getConfigurationSection("Cosmetics."+internalname).getValues(false);
-         
-         String name = (String) valuesmap.get("name");
-         Integer modelID = (Integer) valuesmap.get("modelID");
+         Component name;
+         Integer modelID;
          Material material;
          List<String> lore;
-         CosmeticType type = CosmeticType.valueOf((String)valuesmap.get("type"));
+         List<Component> formattedLore;
+         CosmeticType type;
+         Map<String,Object> valuesmap;
+         
+         cosmeticCount++;
          cosmeticNames.add(internalname);
-   
+         
+         lore = new ArrayList<>();
+         formattedLore = new ArrayList<>();
+         valuesmap = config.getConfigurationSection("Cosmetics."+internalname).getValues(false);
+         name = Component.text((String) valuesmap.get("name"));
+         modelID = (Integer) valuesmap.get("modelID");
+         type = CosmeticType.valueOf((String)valuesmap.get("type"));
+         
          if(valuesmap.get("material") != null) {
             material = Material.matchMaterial(valuesmap.get("material").toString());
          } else material = Material.PAPER;
          
          if (valuesmap.get("lore") instanceof List) {
             lore = (List<String>) valuesmap.get("lore");
-         } else {
-            lore = new ArrayList<>();
          }
          
-         Cosmetic cosmetic = new Cosmetic(internalname,name,modelID,material,lore,type);
+         lore.forEach((String stg) -> formattedLore.add(
+                 Component.text(stg)
+                 .color(TextColor.color(190, 190, 190))
+                 .decoration(TextDecoration.ITALIC,false)
+         ));
+         
+         Cosmetic cosmetic = new Cosmetic(internalname,name,modelID,material,formattedLore,type);
          cosmeticsList.add(cosmetic);
       }
       Cosmetics.setCachedCosmeticList(cosmeticsList);
@@ -66,7 +80,7 @@ public class CosmeticFactory {
    public Integer getCosmeticCount() {
       return cosmeticCount;
    }
-   public List<String> getCosmeticNames() {
+   public List<String> getInternalCosmeticNames() {
       return cosmeticNames;
    }
    

@@ -2,6 +2,8 @@ package com.ilm9001.cosmetics.commands;
 
 import com.ilm9001.cosmetics.Cosmetics;
 import com.ilm9001.cosmetics.util.Cosmetic;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -45,7 +47,11 @@ public class GiveCosmetic implements CommandExecutor {
          
          cosmeticItem = cosmetic.getCosmeticItemStack();
          ((Player) sender).getInventory().addItem(cosmeticItem);
-         sender.sendMessage(ChatColor.GREEN + "Gave " + ChatColor.AQUA + cosmetic.getCosmeticName() + " to " + toPlayer.getName());
+         Component gave = Component.text("Gave ").color(TextColor.color(0, 255, 110))
+                 .append(cosmetic.getCosmeticName())
+                 .append(Component.text(" to ").color(TextColor.color(0, 255, 110))
+                 .append(Component.text(toPlayer.getName()).color(TextColor.color(0, 210, 255))));
+         sender.sendMessage(gave);
          return true;
       }
       return false;
