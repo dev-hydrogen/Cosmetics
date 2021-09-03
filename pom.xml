@@ -11,7 +11,7 @@
 
     <name>Cosmetics</name>
 
-    <description>Cosmetics plugin for Dreamland</description>
+    <description>Cosmetics plugin utilizing custom models</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
