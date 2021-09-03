@@ -98,4 +98,20 @@ public class Util {
       
       return metaContainer.get(nameKey, PersistentDataType.STRING);
    }
+   
+   /**
+    * Get a Cosmetic from its InternalName
+    *
+    * @param name InternalName, always one "word"
+    * @return     Cosmetic from InternalName, null if none found.
+    */
+   
+   public @Nullable static Cosmetic getCosmeticFromName(String name) {
+      for (Cosmetic cosmetic : Cosmetics.getCachedCosmeticList()) {
+         if(cosmetic.getInternalName().equals(name)) { //probably inefficient for large amounts of cosmetics?
+            return cosmetic;
+         }
+      }
+      return null;
+   }
 }

@@ -2,6 +2,7 @@ package com.ilm9001.cosmetics.commands;
 
 import com.ilm9001.cosmetics.Cosmetics;
 import com.ilm9001.cosmetics.util.Cosmetic;
+import com.ilm9001.cosmetics.util.Util;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
@@ -22,7 +23,7 @@ public class GiveCosmetic implements CommandExecutor {
    @Override
    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
       if(sender.hasPermission("cosmetics.givecosmetic") && (args.length == 1 || args.length == 2)) {
-         Cosmetic cosmetic = Cosmetics.getCosmeticFactory().getCosmeticFromName(args[0]);
+         Cosmetic cosmetic = Util.getCosmeticFromName(args[0]);
          ItemStack cosmeticItem;
          Player toPlayer;
    

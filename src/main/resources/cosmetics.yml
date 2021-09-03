@@ -1,0 +1,50 @@
+Cosmetics:
+  Crown:                          # Internally used name, something you can recognize across plugins
+    name: Crown                   # Name of cosmetic
+    modelID: 0                    # customModelData
+    lore: ["Such a cool crown", "wow! cool!", "model from otDan"]           # Lore to display
+    material: PAPER               # Material, recommended: PAPER, must be all uppercase
+    type: HAT                     # Types: INVENTORY_ITEM, HAT, CHESTPLATE, LEGGINGS, BOOTS
+    rarity: LEGENDARY             # Rarity, must be all Upper-case, Types: COMMON, UNCOMMON, RARE, EPIC, LEGENDARY
+  TopHat:
+    name: Top Hat
+    modelID: 1
+    lore: ["Top Hat", "Made of organic Silk", "Model by ilm9001"]
+    material: PAPER
+    type: HAT
+    rarity: EPIC
+  Shirt:
+    name: Dreamland Shirt
+    modelID: 2
+    lore: ["Shirt!", "Made out of 100%", "Model by ilm9001"]
+    material: PAPER
+    type: CHESTPLATE
+    rarity: UNCOMMON
+  Skirt:
+    name: Pink Skirt
+    modelID: 3
+    lore: ["Skirt!", "9 in 10 doctors recommend!", "Model by ilm9001"]
+    material: PAPER
+    type: LEGGINGS
+    rarity: UNCOMMON
+  Sneakers:
+    name: NONE
+    modelID: 4
+    lore: ["Sneakers", "Like it was made for your feet.", "Model by ilm9001"]
+    material: PAPER
+    type: BOOTS
+    rarity: COMMON
+  CoffeeCup:
+    name: Coffee Cup
+    modelID: 5
+    lore: ["Coffee Cup", "Coffee included!", "Model by ilm9001"]
+    material: PAPER
+    type: INVENTORY_ITEM
+    rarity: RARE
+  NewCosmetic:
+    name: New Cosmetic
+    modelID: 6
+    lore: ["For testing", "Look at me!"]
+    material: PAPER
+    type: INVENTORY_ITEM
+    rarity: COMMON

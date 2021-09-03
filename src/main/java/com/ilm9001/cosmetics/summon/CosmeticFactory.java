@@ -1,6 +1,8 @@
 package com.ilm9001.cosmetics.summon;
 
 import com.ilm9001.cosmetics.Cosmetics;
+import com.ilm9001.cosmetics.rarity.Rarities;
+import com.ilm9001.cosmetics.rarity.Rarity;
 import com.ilm9001.cosmetics.util.Cosmetic;
 import com.ilm9001.cosmetics.util.CosmeticType;
 import net.kyori.adventure.text.Component;
@@ -10,7 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +35,8 @@ public class CosmeticFactory {
    public @NotNull List<Cosmetic> getCosmeticsFromConfig() {
       List<Cosmetic> cosmeticsList = new ArrayList<>();
       JavaPlugin plugin = Cosmetics.getInstance();
-      Cosmetics.getInstance().reloadConfig();
-      FileConfiguration config = plugin.getConfig();
+      Cosmetics.refreshCosmetics();
+      FileConfiguration config = Cosmetics.getCosmetics();
       
       for (String internalname : config.getConfigurationSection("Cosmetics").getKeys(false)) {
          Component name;
@@ -45,6 +46,7 @@ public class CosmeticFactory {
          List<Component> formattedLore;
          CosmeticType type;
          Map<String,Object> valuesmap;
+         Rarity rarity;
          
          cosmeticCount++;
          cosmeticNames.add(internalname);
@@ -55,22 +57,20 @@ public class CosmeticFactory {
          name = Component.text((String) valuesmap.get("name"));
          modelID = (Integer) valuesmap.get("modelID");
          type = CosmeticType.valueOf((String)valuesmap.get("type"));
+         rarity = Rarities.valueOf(((String)valuesmap.get("rarity")).toUpperCase()).getRarity();
          
-         if(valuesmap.get("material") != null) {
-            material = Material.matchMaterial(valuesmap.get("material").toString());
-         } else material = Material.PAPER;
+         if(valuesmap.get("material") != null) material = Material.matchMaterial(valuesmap.get("material").toString());
+         else material = Material.PAPER;
          
-         if (valuesmap.get("lore") instanceof List) {
-            lore = (List<String>) valuesmap.get("lore");
-         }
+         if (valuesmap.get("lore") instanceof List) lore = (List<String>) valuesmap.get("lore");
          
          lore.forEach((String stg) -> formattedLore.add(
                  Component.text(stg)
-                 .color(TextColor.color(190, 190, 190))
+                 .color(TextColor.color(170, 170, 170))
                  .decoration(TextDecoration.ITALIC,false)
          ));
          
-         Cosmetic cosmetic = new Cosmetic(internalname,name,modelID,material,formattedLore,type);
+         Cosmetic cosmetic = new Cosmetic(internalname,name,modelID,material,formattedLore,type,rarity);
          cosmeticsList.add(cosmetic);
       }
       Cosmetics.setCachedCosmeticList(cosmeticsList);
@@ -84,19 +84,4 @@ public class CosmeticFactory {
       return cosmeticNames;
    }
    
-   /**
-    * Get a Cosmetic from its InternalName
-    *
-    * @param name InternalName, always one "word"
-    * @return     Cosmetic from InternalName, null if none found.
-    */
-   
-   public @Nullable Cosmetic getCosmeticFromName(String name) {
-      for (Cosmetic cosmetic : Cosmetics.getCachedCosmeticList()) {
-         if(cosmetic.getInternalName().equals(name)) { //probably inefficient for large amounts of cosmetics?
-            return cosmetic;
-         }
-      }
-      return null;
-   }
 }

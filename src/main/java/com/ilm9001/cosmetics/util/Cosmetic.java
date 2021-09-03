@@ -1,10 +1,10 @@
 package com.ilm9001.cosmetics.util;
 
 import com.ilm9001.cosmetics.Cosmetics;
+import com.ilm9001.cosmetics.rarity.Rarities;
+import com.ilm9001.cosmetics.rarity.Rarity;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -14,7 +14,6 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,17 +28,20 @@ public class Cosmetic {
    private final Material material;
    private final List<Component> lore;
    private final CosmeticType type;
+   private final Rarity rarity;
    
-   public Cosmetic(String internalCosmeticName, Component cosmeticName, Integer modelID, Material material, List<Component> lore, CosmeticType type) {
+   public Cosmetic(String internalCosmeticName, Component cosmeticName, Integer modelID, Material material, List<Component> lore, CosmeticType type, Rarity rarity) {
       this.internalCosmeticName = internalCosmeticName;
       this.cosmeticName = cosmeticName
               .decoration(TextDecoration.ITALIC,false)
-              .decoration(TextDecoration.BOLD,true)
-              .color(TextColor.color(92, 205, 255));
+              .color(rarity.getRarityColor());
       this.modelID = modelID;
       this.material = material;
       this.type = type;
       this.lore = lore;
+      this.lore.add(Component.text(""));
+      this.lore.add(rarity.getFormattedRarityName());
+      this.rarity = rarity;
    }
    
    public @NotNull Integer getModelID() {
@@ -60,6 +62,7 @@ public class Cosmetic {
    public @NotNull String getInternalName() {
       return internalCosmeticName;
    }
+   public @NotNull Rarity getRarity() { return rarity; }
    
    /**
     * Creates a ItemStack with the properties of the provided Cosmetic
@@ -71,6 +74,7 @@ public class Cosmetic {
       ItemMeta meta = stack.getItemMeta();
       NamespacedKey typekey = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-type");
       NamespacedKey namekey = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-name");
+      NamespacedKey raritykey = new NamespacedKey(Cosmetics.getInstance(), "rarity");
       PersistentDataContainer metaContainer = meta.getPersistentDataContainer();
       
       meta.lore(this.getLore());
@@ -78,6 +82,7 @@ public class Cosmetic {
       meta.displayName(this.getCosmeticName());
       metaContainer.set(typekey,PersistentDataType.BYTE,this.getType().getID());
       metaContainer.set(namekey,PersistentDataType.STRING,this.getInternalName());
+      metaContainer.set(raritykey,PersistentDataType.STRING,this.getRarity().getInternalRarityName());
       
       stack.setItemMeta(meta);
       
@@ -94,18 +99,21 @@ public class Cosmetic {
       ItemMeta meta = itemStack.getItemMeta();
       NamespacedKey typekey = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-type");
       NamespacedKey namekey = new NamespacedKey(Cosmetics.getInstance(),"cosmetic-name");
+      NamespacedKey raritykey = new NamespacedKey(Cosmetics.getInstance(), "rarity");
       PersistentDataContainer metaContainer = meta.getPersistentDataContainer();
       Optional<CosmeticType> type;
       String internalname;
+      Rarity rarity;
       
-      if(metaContainer.get(typekey,PersistentDataType.BYTE) != null && metaContainer.get(namekey,PersistentDataType.STRING) != null) {
+      if(Util.isCosmetic(itemStack)) {
          type = CosmeticType.getFromID(metaContainer.get(typekey, PersistentDataType.BYTE));
          internalname = metaContainer.get(namekey,PersistentDataType.STRING);
+         rarity = Rarities.valueOf(metaContainer.get(raritykey,PersistentDataType.STRING).toUpperCase()).getRarity();
       } else {
          return null;
       }
       if(itemStack.hasItemMeta() & meta.hasDisplayName() & meta.hasCustomModelData() & meta.hasLore() & type.isPresent()) {
-         return new Cosmetic(internalname,meta.displayName(),meta.getCustomModelData(),itemStack.getType(),meta.lore(),type.get());
+         return new Cosmetic(internalname,meta.displayName(),meta.getCustomModelData(),itemStack.getType(),meta.lore(),type.get(),rarity);
       } else {
          return null;
       }

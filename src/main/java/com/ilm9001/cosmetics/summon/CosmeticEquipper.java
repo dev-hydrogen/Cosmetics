@@ -32,7 +32,7 @@ public class CosmeticEquipper {
          CosmeticType cosmeticType = cosmetic.getType();
          PlayerInventory inv = player.getInventory();
          
-         if (inv.getItem(36 + cosmeticType.getID()) == null) {
+         if (inv.getItem(36 + cosmeticType.getID()) == null && cosmeticType != CosmeticType.INVENTORY_ITEM) { //dont switch inventory items
             inv.setItem(36 + cosmeticType.getID(), item);
             inv.setItem(slot,null);
          }

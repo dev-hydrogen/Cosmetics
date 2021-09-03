@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 
 
 /**
@@ -25,10 +26,10 @@ public class ArmorSlotClickListener implements Listener {
    public void onInventoryClick(InventoryClickEvent e) {
       Inventory inv = e.getClickedInventory();
       
-      if(e.getSlotType() == InventoryType.SlotType.ARMOR && inv != null) { //only apply to armor slots
+      if(e.getSlotType() == InventoryType.SlotType.ARMOR && inv != null && inv.getType() == InventoryType.PLAYER) { //only apply to armor slots
          equipper.equipCosmeticFromSlotClick(e.getWhoClicked(), e.getClickedInventory(), e.getCurrentItem(), e.getCursor(), e.getSlot());
       }
-      if(e.isShiftClick() && inv != null) {
+      if(e.isShiftClick() && inv != null && inv.getType() == InventoryType.PLAYER && e.getInventory().getType() == InventoryType.CRAFTING) {
          if(e.getSlotType() != InventoryType.SlotType.ARMOR) {
             equipper.equipCosmeticFromShiftClick(e.getCurrentItem(), e.getClickedInventory(), e.getSlot());
          }
