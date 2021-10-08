@@ -5,6 +5,7 @@ import com.ilm9001.cosmetics.util.Cosmetic;
 import com.ilm9001.cosmetics.util.Util;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -52,7 +53,11 @@ public class GiveCosmetic implements CommandExecutor {
                  .append(cosmetic.getCosmeticName())
                  .append(Component.text(" to ").color(TextColor.color(0, 255, 110))
                  .append(Component.text(toPlayer.getName()).color(TextColor.color(0, 210, 255))));
-         sender.sendMessage(gave);
+         if(Util.isSpigot()) {
+            sender.sendMessage(LegacyComponentSerializer.builder().build().serialize(gave));
+         } else {
+            sender.sendMessage(gave);
+         }
          return true;
       }
       return false;

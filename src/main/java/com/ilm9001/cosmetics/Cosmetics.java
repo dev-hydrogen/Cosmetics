@@ -7,6 +7,8 @@ import com.ilm9001.cosmetics.listeners.ArmorSlotClickListener;
 import com.ilm9001.cosmetics.listeners.RightClickEventListener;
 import com.ilm9001.cosmetics.summon.CosmeticFactory;
 import com.ilm9001.cosmetics.util.Cosmetic;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,6 +39,8 @@ public class Cosmetics extends JavaPlugin {
          cosmeticFactory = new CosmeticFactory();
          cosmeticList = cosmeticFactory.getCosmeticsFromConfig();
       }
+      int pluginId = 12993;
+      Metrics metrics = new Metrics(this,pluginId);
       
       // probably a good idea to eventually move these elsewhere to work as a method
       this.getCommand("givecosmetic").setExecutor(new GiveCosmetic());
@@ -50,9 +54,7 @@ public class Cosmetics extends JavaPlugin {
    public void onDisable() {
    }
    
-   public static JavaPlugin getInstance() {
-      return instance;
-   }
+   public static JavaPlugin getInstance() { return instance; }
    public static CosmeticFactory getCosmeticFactory() { return cosmeticFactory; }
    
    /**

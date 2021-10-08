@@ -114,4 +114,13 @@ public class Util {
       }
       return null;
    }
+   
+   public static boolean isSpigot() {
+      try {
+         Class.forName("io.papermc.lib.PaperLib");
+         return false;
+      } catch (ClassNotFoundException e) {
+         return true;
+      }
+   }
 }
