@@ -48,7 +48,7 @@ public class GiveCosmetic implements CommandExecutor {
          }
          
          cosmeticItem = cosmetic.getCosmeticItemStack();
-         ((Player) sender).getInventory().addItem(cosmeticItem);
+         toPlayer.getInventory().addItem(cosmeticItem);
          Component gave = Component.text("Gave ").color(TextColor.color(0, 255, 110))
                  .append(cosmetic.getCosmeticName())
                  .append(Component.text(" to ").color(TextColor.color(0, 255, 110))

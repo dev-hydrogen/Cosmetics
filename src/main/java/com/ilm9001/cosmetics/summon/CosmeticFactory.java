@@ -34,7 +34,6 @@ public class CosmeticFactory {
     */
    public @NotNull List<Cosmetic> getCosmeticsFromConfig() {
       List<Cosmetic> cosmeticsList = new ArrayList<>();
-      JavaPlugin plugin = Cosmetics.getInstance();
       Cosmetics.refreshCosmetics();
       FileConfiguration config = Cosmetics.getCosmetics();
       
