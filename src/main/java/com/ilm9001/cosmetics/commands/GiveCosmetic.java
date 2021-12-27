@@ -20,46 +20,46 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 public class GiveCosmetic implements CommandExecutor {
-   
-   @Override
-   public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-      if(sender.hasPermission("cosmetics.givecosmetic") && (args.length == 1 || args.length == 2)) {
-         Cosmetic cosmetic = Util.getCosmeticFromName(args[0]);
-         ItemStack cosmeticItem;
-         Player toPlayer;
-   
-         if (args.length == 2) {
-            toPlayer = Bukkit.getPlayer(args[1]);
-         } else if (sender instanceof Player) {
-            toPlayer = (Player) sender;
-         } else {
-            sender.sendMessage(ChatColor.RED + "Invalid player! Are you trying to give the console a cosmetic?");
+    
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(sender.hasPermission("cosmetics.givecosmetic") && (args.length == 1 || args.length == 2)) {
+            Cosmetic cosmetic = Util.getCosmeticFromName(args[0]);
+            ItemStack cosmeticItem;
+            Player toPlayer;
+            
+            if (args.length == 2) {
+                toPlayer = Bukkit.getPlayer(args[1]);
+            } else if (sender instanceof Player) {
+                toPlayer = (Player) sender;
+            } else {
+                sender.sendMessage(ChatColor.RED + "Invalid player! Are you trying to give the console a cosmetic?");
+                return true;
+            }
+            
+            if(toPlayer == null) {
+                sender.sendMessage(ChatColor.RED + "Invalid player! Are they online and is the name correct?");
+                return true;
+            }
+            
+            if(cosmetic == null) {
+                sender.sendMessage(ChatColor.RED + "Invalid cosmetic name");
+                return true;
+            }
+            
+            cosmeticItem = cosmetic.getCosmeticItemStack();
+            toPlayer.getInventory().addItem(cosmeticItem);
+            Component gave = Component.text("Gave ").color(TextColor.color(0, 255, 110))
+                    .append(cosmetic.getCosmeticName())
+                    .append(Component.text(" to ").color(TextColor.color(0, 255, 110))
+                            .append(Component.text(toPlayer.getName()).color(TextColor.color(0, 210, 255))));
+            if(Util.isSpigot()) {
+                sender.sendMessage(LegacyComponentSerializer.builder().build().serialize(gave));
+            } else {
+                sender.sendMessage(gave);
+            }
             return true;
-         }
-         
-         if(toPlayer == null) {
-            sender.sendMessage(ChatColor.RED + "Invalid player! Are they online and is the name correct?");
-            return true;
-         }
-         
-         if(cosmetic == null) {
-            sender.sendMessage(ChatColor.RED + "Invalid cosmetic name");
-            return true;
-         }
-         
-         cosmeticItem = cosmetic.getCosmeticItemStack();
-         toPlayer.getInventory().addItem(cosmeticItem);
-         Component gave = Component.text("Gave ").color(TextColor.color(0, 255, 110))
-                 .append(cosmetic.getCosmeticName())
-                 .append(Component.text(" to ").color(TextColor.color(0, 255, 110))
-                 .append(Component.text(toPlayer.getName()).color(TextColor.color(0, 210, 255))));
-         if(Util.isSpigot()) {
-            sender.sendMessage(LegacyComponentSerializer.builder().build().serialize(gave));
-         } else {
-            sender.sendMessage(gave);
-         }
-         return true;
-      }
-      return false;
-   }
+        }
+        return false;
+    }
 }

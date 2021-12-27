@@ -14,18 +14,18 @@ import org.bukkit.event.player.PlayerInteractEvent;
  */
 
 public class RightClickEventListener implements Listener {
-   private final CosmeticEquipper equipper;
-   
-   public RightClickEventListener() {
-      equipper = new CosmeticEquipper();
-   }
-   
-   @EventHandler
-   public void onRightClick(PlayerInteractEvent e) {
-      if(e.getItem() != null && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-         if(Util.isCosmetic(e.getItem())) {
-            equipper.equipCosmetic(e.getPlayer(),e.getItem(),e.getHand());
-         }
-      }
-   }
+    private final CosmeticEquipper equipper;
+    
+    public RightClickEventListener() {
+        equipper = new CosmeticEquipper();
+    }
+    
+    @EventHandler
+    public void onRightClick(PlayerInteractEvent e) {
+        if(e.getItem() != null && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
+            if(Util.isCosmetic(e.getItem())) {
+                equipper.equipCosmetic(e.getPlayer(),e.getItem(),e.getHand());
+            }
+        }
+    }
 }

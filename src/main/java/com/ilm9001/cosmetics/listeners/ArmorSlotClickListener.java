@@ -16,26 +16,26 @@ import org.bukkit.inventory.InventoryView;
  */
 
 public class ArmorSlotClickListener implements Listener {
-   private final CosmeticEquipper equipper;
-   
-   public ArmorSlotClickListener() {
-      equipper = new CosmeticEquipper();
-   }
-   
-   @EventHandler
-   public void onInventoryClick(InventoryClickEvent e) {
-      Inventory inv = e.getClickedInventory();
-      
-      if(e.getSlotType() == InventoryType.SlotType.ARMOR && inv != null && inv.getType() == InventoryType.PLAYER) { //only apply to armor slots
-         equipper.equipCosmeticFromSlotClick(e.getWhoClicked(), e.getClickedInventory(), e.getCurrentItem(), e.getCursor(), e.getSlot());
-      }
-      if(e.isShiftClick() && inv != null && inv.getType() == InventoryType.PLAYER && e.getInventory().getType() == InventoryType.CRAFTING) {
-         if(e.getSlotType() != InventoryType.SlotType.ARMOR) {
-            equipper.equipCosmeticFromShiftClick(e.getCurrentItem(), e.getClickedInventory(), e.getSlot());
-         }
-      }
-   
-      //https://hub.spigotmc.org/jira/browse/SPIGOT-6701
-      //Inventory click event does not fire for non-armor pieces when in creative. Not possible to fix unless mojang fixes it.
-   }
+    private final CosmeticEquipper equipper;
+    
+    public ArmorSlotClickListener() {
+        equipper = new CosmeticEquipper();
+    }
+    
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent e) {
+        Inventory inv = e.getClickedInventory();
+        
+        if(e.getSlotType() == InventoryType.SlotType.ARMOR && inv != null && inv.getType() == InventoryType.PLAYER) { //only apply to armor slots
+            equipper.equipCosmeticFromSlotClick(e.getWhoClicked(), e.getClickedInventory(), e.getCurrentItem(), e.getCursor(), e.getSlot());
+        }
+        if(e.isShiftClick() && inv != null && inv.getType() == InventoryType.PLAYER && e.getInventory().getType() == InventoryType.CRAFTING) {
+            if(e.getSlotType() != InventoryType.SlotType.ARMOR) {
+                equipper.equipCosmeticFromShiftClick(e.getCurrentItem(), e.getClickedInventory(), e.getSlot());
+            }
+        }
+        
+        //https://hub.spigotmc.org/jira/browse/SPIGOT-6701
+        //Inventory click event does not fire for non-armor pieces when in creative. Not possible to fix unless mojang fixes it.
+    }
 }

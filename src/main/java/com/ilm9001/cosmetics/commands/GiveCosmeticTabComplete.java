@@ -13,15 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GiveCosmeticTabComplete implements TabCompleter {
-   @Override
-   public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-      if(sender.hasPermission("cosmetics.givecosmetic") && args.length <= 1) {
-         return Cosmetics.getCosmeticFactory().getInternalCosmeticNames();
-      } else if (sender.hasPermission("cosmetics.givecosmetic") && args.length == 2) {
-         List<String> plrnames = new ArrayList<>();
-         Bukkit.getOnlinePlayers().forEach((Player plr) -> plrnames.add(plr.getName()));
-         return plrnames;
-      }
-      return new ArrayList<>();
-   }
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if(sender.hasPermission("cosmetics.givecosmetic") && args.length <= 1) {
+            return Cosmetics.getCosmeticFactory().getInternalCosmeticNames();
+        } else if (sender.hasPermission("cosmetics.givecosmetic") && args.length == 2) {
+            List<String> plrnames = new ArrayList<>();
+            Bukkit.getOnlinePlayers().forEach((Player plr) -> plrnames.add(plr.getName()));
+            return plrnames;
+        }
+        return new ArrayList<>();
+    }
 }
