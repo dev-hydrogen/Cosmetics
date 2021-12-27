@@ -1,9 +1,9 @@
 name: Cosmetics
 version: ${project.version}
 main: com.ilm9001.cosmetics.Cosmetics
-api-version: 1.17
+api-version: 1.18
 authors: [ ilm9001 ]
-description: Cosmetics plugin for Dreamland
+description: Cosmetics plugin
 website: ilm9001.com
 
 commands:
