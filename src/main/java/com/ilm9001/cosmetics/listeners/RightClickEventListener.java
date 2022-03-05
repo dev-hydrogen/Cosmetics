@@ -24,6 +24,7 @@ public class RightClickEventListener implements Listener {
     public void onRightClick(PlayerInteractEvent e) {
         if(e.getItem() != null && (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK)) {
             if(Util.isCosmetic(e.getItem())) {
+                e.setCancelled(true);
                 equipper.equipCosmetic(e.getPlayer(),e.getItem(),e.getHand());
             }
         }
