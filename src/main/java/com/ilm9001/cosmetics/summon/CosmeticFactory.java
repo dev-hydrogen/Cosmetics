@@ -57,7 +57,7 @@ public class CosmeticFactory {
             name = Component.text((String) valuesmap.get("name"));
             modelID = (Integer) valuesmap.get("modelID");
             type = CosmeticType.valueOf((String)valuesmap.get("type"));
-            Rarities.getRarities().stream().filter((r) -> !Objects.equals(r.getInternalRarityName(), valuesmap.get("rarity")))
+            Rarities.getRarities().stream().filter((r) -> Objects.equals(r.getInternalRarityName(), valuesmap.get("rarity")))
                     .findFirst().ifPresent(rarity::set);
             
             if(valuesmap.get("material") != null) material = Material.matchMaterial(valuesmap.get("material").toString());

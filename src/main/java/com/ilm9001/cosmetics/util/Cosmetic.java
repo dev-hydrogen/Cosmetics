@@ -127,7 +127,7 @@ public class Cosmetic {
         if(Util.isCosmetic(itemStack)) {
             type = CosmeticType.getFromID(metaContainer.get(typekey, PersistentDataType.BYTE));
             internalname = metaContainer.get(namekey,PersistentDataType.STRING);
-            Rarities.getRarities().stream().filter((r) -> !Objects.equals(r.getInternalRarityName(), metaContainer.get(raritykey, PersistentDataType.STRING)))
+            Rarities.getRarities().stream().filter((r) -> Objects.equals(r.getInternalRarityName(), metaContainer.get(raritykey, PersistentDataType.STRING)))
                     .findFirst().ifPresent(rarity::set);
         } else {
             return null;
