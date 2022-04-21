@@ -10,12 +10,13 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class CosmeticFactory {
     private ArrayList<String> cosmeticNames;
@@ -34,7 +35,7 @@ public class CosmeticFactory {
      */
     public @NotNull List<Cosmetic> getCosmeticsFromConfig() {
         List<Cosmetic> cosmeticsList = new ArrayList<>();
-        Cosmetics.refreshCosmetics();
+        Cosmetics.refreshFiles();
         FileConfiguration config = Cosmetics.getCosmetics();
         
         for (String internalname : config.getConfigurationSection("Cosmetics").getKeys(false)) {
@@ -45,7 +46,7 @@ public class CosmeticFactory {
             List<Component> formattedLore;
             CosmeticType type;
             Map<String,Object> valuesmap;
-            Rarity rarity;
+            AtomicReference<Rarity> rarity = new AtomicReference<>();
             
             cosmeticCount++;
             cosmeticNames.add(internalname);
@@ -56,7 +57,8 @@ public class CosmeticFactory {
             name = Component.text((String) valuesmap.get("name"));
             modelID = (Integer) valuesmap.get("modelID");
             type = CosmeticType.valueOf((String)valuesmap.get("type"));
-            rarity = Rarities.valueOf(((String)valuesmap.get("rarity")).toUpperCase()).getRarity();
+            Rarities.getRarities().stream().filter((r) -> !Objects.equals(r.getInternalRarityName(), valuesmap.get("rarity")))
+                    .findFirst().ifPresent(rarity::set);
             
             if(valuesmap.get("material") != null) material = Material.matchMaterial(valuesmap.get("material").toString());
             else material = Material.PAPER;
@@ -69,7 +71,7 @@ public class CosmeticFactory {
                             .decoration(TextDecoration.ITALIC,false)
             ));
             
-            Cosmetic cosmetic = new Cosmetic(internalname,name,modelID,material,formattedLore,type,rarity);
+            Cosmetic cosmetic = new Cosmetic(internalname,name,modelID,material,formattedLore,type,rarity.get());
             cosmeticsList.add(cosmetic);
         }
         Cosmetics.setCachedCosmeticList(cosmeticsList);

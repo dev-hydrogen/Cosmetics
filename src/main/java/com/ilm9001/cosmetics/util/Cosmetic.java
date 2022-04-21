@@ -17,7 +17,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Main Cosmetic class.
@@ -120,12 +122,13 @@ public class Cosmetic {
         PersistentDataContainer metaContainer = meta.getPersistentDataContainer();
         Optional<CosmeticType> type;
         String internalname;
-        Rarity rarity;
+        AtomicReference<Rarity> rarity = new AtomicReference<>();
         
         if(Util.isCosmetic(itemStack)) {
             type = CosmeticType.getFromID(metaContainer.get(typekey, PersistentDataType.BYTE));
             internalname = metaContainer.get(namekey,PersistentDataType.STRING);
-            rarity = Rarities.valueOf(metaContainer.get(raritykey,PersistentDataType.STRING).toUpperCase()).getRarity();
+            Rarities.getRarities().stream().filter((r) -> !Objects.equals(r.getInternalRarityName(), metaContainer.get(raritykey, PersistentDataType.STRING)))
+                    .findFirst().ifPresent(rarity::set);
         } else {
             return null;
         }
@@ -134,9 +137,9 @@ public class Cosmetic {
                 List<Component> lore = new ArrayList<>();
                 LegacyComponentSerializer serializer = LegacyComponentSerializer.builder().build();
                 meta.getLore().forEach((l) -> lore.add(serializer.deserialize(l)));
-                return new Cosmetic(internalname,Component.text(meta.getDisplayName()),meta.getCustomModelData(),itemStack.getType(),lore,type.get(),rarity);
+                return new Cosmetic(internalname,Component.text(meta.getDisplayName()),meta.getCustomModelData(),itemStack.getType(),lore,type.get(), rarity.get());
             }
-            return new Cosmetic(internalname,meta.displayName(),meta.getCustomModelData(),itemStack.getType(),meta.lore(),type.get(),rarity);
+            return new Cosmetic(internalname,meta.displayName(),meta.getCustomModelData(),itemStack.getType(),meta.lore(),type.get(), rarity.get());
         } else {
             return null;
         }

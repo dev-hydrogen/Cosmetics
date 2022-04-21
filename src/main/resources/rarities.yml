@@ -1,0 +1,16 @@
+Rarities:
+  COMMON:                # Internally used name, something you can recognize across plugins, something like "COMMON, UNCOMMON, RARE, EPIC, LEGENDARY"
+    display: "\uF80A"    # String to display as lore. You may use custom fonts as long as you format the unicode character correctly (such as "\uF80A") May be empty to not display rarity.
+    color: [156,156,156] # Color of the rarity. RGB 0-255.
+  UNCOMMON:
+    display: "\uF80B"
+    color: [ 113,204,27 ]
+  RARE:
+    display: "\uF80C"
+    color: [ 43,208,242 ]
+  EPIC:
+    display: "\uF80D"
+    color: [ 96,96,255 ]
+  LEGENDARY:
+    display: "\uF80E"
+    color: [ 255,185,32 ]

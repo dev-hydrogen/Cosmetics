@@ -5,8 +5,10 @@ import com.ilm9001.cosmetics.commands.GiveCosmeticTabComplete;
 import com.ilm9001.cosmetics.commands.RefreshCosmeticsList;
 import com.ilm9001.cosmetics.listeners.ArmorSlotClickListener;
 import com.ilm9001.cosmetics.listeners.RightClickEventListener;
+import com.ilm9001.cosmetics.rarity.Rarities;
 import com.ilm9001.cosmetics.summon.CosmeticFactory;
 import com.ilm9001.cosmetics.util.Cosmetic;
+import com.ilm9001.cosmetics.util.Util;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -23,8 +25,10 @@ public class Cosmetics extends JavaPlugin {
     private static List<Cosmetic> cosmeticList;
     
     private static FileConfiguration cosmetics;
+    private static FileConfiguration rarities;
     private static File cosmeticsFile;
-    
+    private static File raritiesFile;
+
     // Static abuse? No, Static abusage.
     
     @Override
@@ -32,14 +36,19 @@ public class Cosmetics extends JavaPlugin {
         instance = this;
         
         this.saveDefaultConfig();
-        this.createCosmetics();
-        
+        this.createFiles();
+        Rarities.setRaritiesFromFile();
+
         if(cosmeticFactory == null) {
             cosmeticFactory = new CosmeticFactory();
             cosmeticList = cosmeticFactory.getCosmeticsFromConfig();
         }
         int pluginId = 12993;
         Metrics metrics = new Metrics(this,pluginId);
+
+        if(Util.isSpigot()) {
+            getLogger().info("Spigot detected, disabling paper-only features");
+        }
         
         // probably a good idea to eventually move these elsewhere to work as a method
         this.getCommand("givecosmetic").setExecutor(new GiveCosmetic());
@@ -77,29 +86,45 @@ public class Cosmetics extends JavaPlugin {
     public static FileConfiguration getCosmetics() {
         return cosmetics;
     }
+
+    public static FileConfiguration getRarities() {
+        return rarities;
+    }
+
+    public static File getRaritiesFile() {
+        return raritiesFile;
+    }
     
     /**
-     * Reloads cosmetics file for use in CosmeticFactory.
+     * Reloads files.
      */
-    public static void refreshCosmetics() {
+    public static void refreshFiles() {
         try {
             cosmetics.load(cosmeticsFile);
+            rarities.load(raritiesFile);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
     }
     
     // https://www.spigotmc.org/wiki/config-files/
-    private void createCosmetics() {
+    private void createFiles() {
         cosmeticsFile = new File(getDataFolder(), "cosmetics.yml");
+        raritiesFile = new File(getDataFolder(), "rarities.yml");
         if (!cosmeticsFile.exists()) {
             cosmeticsFile.getParentFile().mkdirs();
             saveResource("cosmetics.yml", false);
         }
+        if(!raritiesFile.exists()) {
+            raritiesFile.getParentFile().mkdirs();
+            saveResource("rarities.yml", false);
+        }
         
         cosmetics = new YamlConfiguration();
+        rarities = new YamlConfiguration();
         try {
             cosmetics.load(cosmeticsFile);
+            rarities.load(raritiesFile);
         } catch (IOException | InvalidConfigurationException e) {
             e.printStackTrace();
         }
